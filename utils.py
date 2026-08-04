@@ -39,7 +39,7 @@ def stop_watch(service):
 def start_watch(service):
     request_body = {
         'labelIds': ['INBOX'],
-        'topicName': f'projects/{settings}/topics/gmail-notifications',
+        'topicName': f'projects/{settings.project_id}/topics/gmail-notifications',
         'labelFilterBehavior': 'INCLUDE'
     }
     return service.users().watch(userId='me', body=request_body).execute()
