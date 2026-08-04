@@ -3,11 +3,11 @@
 import os, glob
 import sys
 import settings
-import datetime
 import json
 import concurrent.futures
 from google.cloud import pubsub_v1
 import google.auth
+import subprocess as sp
 
 os.chdir(os.path.dirname(sys.argv[0]))
 import utils
@@ -22,10 +22,9 @@ subscription_path = subscriber.subscription_path(settings.project_id, settings.s
 
 def callback(message):
     data = json.loads(message.data.decode('utf-8'))
-    datetime_string = '_'.join(str(datetime.datetime.now()).split(' '))
-    with open(f"email_log/{datetime_string}", 'w') as outfile:
-        outfile.write(f"Latest History ID: {data.get('historyId')}\n")
-        outfile.write(f"Payload: {data}")
+    email_id = data.get('id')
+
+    sp.run(f"{settings.ttab_path} '{os.getcwd()}/forward_email.py'", shell=True)
     message.ack()
 
 
