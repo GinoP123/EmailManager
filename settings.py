@@ -15,6 +15,7 @@ TIMEOUT = int(datetime.timedelta(hours=1).total_seconds())
 
 email_list = [
 	'ginoprasad@gmail.com',
+	'giprasad@ucsd.edu'
     # 'anyaprasad24@gmail.com',
 	# 'neilprasad4@gmail.com',
 	# 'caroline.prasad@iac.com',
