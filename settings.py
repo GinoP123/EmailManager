@@ -12,3 +12,7 @@ subscription_id = "gmail-notifications-sub"
 
 TIMEOUT = int(datetime.timedelta(hours=1).total_seconds())
 
+
+email_list = [
+	'ginoprasad@gmail.com'
+]
