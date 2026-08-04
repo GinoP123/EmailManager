@@ -1,3 +1,6 @@
 api_key
-.ipynb_checkpoints
 email_log
+cron_log
+__pycache__
+.ipynb_checkpoints
+.DS_Store
