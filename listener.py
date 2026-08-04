@@ -24,7 +24,7 @@ def callback(message):
     data = json.loads(message.data.decode('utf-8'))
     email_id = data.get('id')
 
-    sp.run(f"{settings.ttab_path} '{os.getcwd()}/forward_email.py'", shell=True)
+    sp.run(f"{settings.ttab_path} '{os.getcwd()}/forward_email.py; exit'", shell=True)
     message.ack()
 
 

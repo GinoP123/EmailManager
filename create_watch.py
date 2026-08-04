@@ -7,7 +7,7 @@ os.chdir(os.path.dirname(sys.argv[0]))
 import utils
 
 
-# print(utils.start_watch(utils.service))
+print(utils.start_watch(utils.service))
 # print(utils.stop_watch(utils.service))
 
 
