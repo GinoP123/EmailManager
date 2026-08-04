@@ -15,10 +15,7 @@ TIMEOUT = int(datetime.timedelta(hours=1).total_seconds())
 
 email_list = [
 	'ginoprasad@gmail.com',
-	'jakeprasad@gmail.com',
-	'anyaprasad24@gmail.com'
-	'neilprasad4@gmail.com',
-	'caroline.prasad@iac.com'
+    'giprasad@ucsd.edu'
 ]
 
 ttab_path = "/opt/homebrew/bin/ttab"
