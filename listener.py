@@ -39,35 +39,29 @@ credentials, default_project = google.auth.default(
 subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
 subscription_path = subscriber.subscription_path(settings.project_id, settings.subscription_id)
 
+processed_eids = set()
 def callback(message):
     message.ack()
     data = json.loads(message.data.decode('utf-8'))
+    list_res = utils.service.users().messages().list(userId='me', q='in:inbox', maxResults=1).execute()
+    messages = list_res.get('messages', [])
+    eid = messages[0]['id']
+    if eid in processed_eids:
+        return
+    processed_eids.add(eid)
 
-    with open("/Users/ginoprasad/Scripts/EmailManager/data.txt", 'a') as outfile:
-        outfile.write(str(data) + '\n\n')
-
-    res = utils.service.users().history().list(
-        userId='me', startHistoryId=max(1, data['historyId'] - 1), historyTypes=['messageAdded']
+    msg = utils.service.users().messages().get(
+        userId='me', id=eid, format='minimal'
     ).execute()
 
-
-    email_ids = []
-    for record in res.get('history', []):
-        for item in record.get('messagesAdded', []):
-            msg = item.get('message', {})
-            if 'INBOX' in msg.get('labelIds', []) and 'SENT' not in msg.get('labelIds', []):
-                email_ids.append(msg['id'])
-
     with open("/Users/ginoprasad/Scripts/EmailManager/data.txt", 'a') as outfile:
-        outfile.write(str(data) + str(email_ids) + '\n\n')
-
-    if not email_ids:
-        return
-
-    output = sp.run(f"{settings.ttab_path} '{os.getcwd()}/forward_email.py '{email_ids[0]}'; exit'", 
-        shell=True, capture_output=True).stdout.decode()
-    print(output)
-
+        outfile.write(f"{data} {msg}\n\n")
+    
+    labels = msg.get('labelIds', [])
+    if 'INBOX' in labels and 'SENT' not in labels:
+        cmd = f"{settings.ttab_path} '{os.getcwd()}/forward_email.py '{eid}'; exit"
+        output = sp.run(cmd, shell=True, capture_output=True).stdout.decode()
+        print(output)
 
 streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
 
