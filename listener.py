@@ -47,17 +47,24 @@ def callback(message):
         outfile.write(str(data) + '\n\n')
 
     res = utils.service.users().history().list(
-        userId='me', startHistoryId=data['historyId'], historyTypes=['messageAdded']
+        userId='me', startHistoryId=max(1, data['historyId'] - 1), historyTypes=['messageAdded']
     ).execute()
 
 
+    email_ids = []
+    for record in res.get('history', []):
+        for item in record.get('messagesAdded', []):
+            msg = item.get('message', {})
+            if 'INBOX' in msg.get('labelIds', []) and 'SENT' not in msg.get('labelIds', []):
+                email_ids.append(msg['id'])
 
-    record = res['history'][0]['messagesAdded'][0]['message']
-    label_ids, email_id = res['labelIds'], res['id']
-    if 'SENT' in label_ids or 'INBOX' not in label_ids:
+    with open("/Users/ginoprasad/Scripts/EmailManager/data.txt", 'a') as outfile:
+        outfile.write(str(data) + str(email_ids) + '\n\n')
+
+    if not email_ids:
         return
 
-    output = sp.run(f"{settings.ttab_path} '{os.getcwd()}/forward_email.py '{email_id}'; exit'", 
+    output = sp.run(f"{settings.ttab_path} '{os.getcwd()}/forward_email.py '{email_ids[0]}'; exit'", 
         shell=True, capture_output=True).stdout.decode()
     print(output)
 
