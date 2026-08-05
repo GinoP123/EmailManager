@@ -46,20 +46,19 @@ def callback(message):
     messages = list_res.get('messages', [])
     eid = messages[0]['id']
     
-    if eid == 
+    if eid == utils.get_last_email_id():
+        return
+    utils.update_last_email_id(eid)
 
     msg = utils.service.users().messages().get(
         userId='me', id=eid, format='minimal'
     ).execute()
 
-    with open("/Users/ginoprasad/Scripts/EmailManager/data.txt", 'a') as outfile:
-        outfile.write(f"{data} {msg} {eid} {processed_eids}\n\n")
-    
     labels = msg.get('labelIds', [])
     if 'INBOX' in labels and 'SENT' not in labels:
         cmd = f"{settings.ttab_path} '{os.getcwd()}/forward_email.py {eid}; exit'"
-        output = sp.run(cmd, shell=True, capture_output=True).stdout.decode()
-        print(output)
+        sp.run(cmd, shell=True)
+
 
 streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
 

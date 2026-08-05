@@ -45,4 +45,14 @@ def start_watch(service):
     return service.users().watch(userId='me', body=request_body).execute()
 
 
+def get_last_email_id():
+    if not os.path.exists(settings.last_email_cache_file):
+        return ''
+    with open(settings.last_email_cache_file) as infile:
+        return infile.read().strip()
+
+def update_last_email_id(eid):
+    with open(settings.last_email_cache_file, 'w') as outfile:
+        outfile.write(eid)
+
 

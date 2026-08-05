@@ -6,6 +6,7 @@ SCOPES = ['https://mail.google.com/']
 token_file = 'api_key/token.json'
 client_file = 'api_key/client_secret.json'
 
+last_email_cache_file = 'cron_log/last_email.txt'
 
 project_id = "mail-service-504402"
 subscription_id = "gmail-notifications-sub"
