@@ -43,15 +43,22 @@ def callback(message):
     message.ack()
     data = json.loads(message.data.decode('utf-8'))
 
+    with open("/Users/ginoprasad/Scripts/EmailManager/data.txt", 'a') as outfile:
+        outfile.write(str(data) + '\n\n')
+
     res = utils.service.users().history().list(
         userId='me', startHistoryId=data['historyId'], historyTypes=['messageAdded']
     ).execute()
 
-    record = res['history'][0]['messagesAdded'][0]['message']
-    if 'SENT' in record['labelIds'] or 'INBOX' not in record['labelIds']:
-        continue
 
-    output = sp.run(f"{settings.ttab_path} '{os.getcwd()}/forward_email.py; exit'", shell=True, capture_output=True).stdout.decode()
+
+    record = res['history'][0]['messagesAdded'][0]['message']
+    label_ids, email_id = res['labelIds'], res['id']
+    if 'SENT' in label_ids or 'INBOX' not in label_ids:
+        return
+
+    output = sp.run(f"{settings.ttab_path} '{os.getcwd()}/forward_email.py '{email_id}'; exit'", 
+        shell=True, capture_output=True).stdout.decode()
     print(output)
 
 
