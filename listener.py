@@ -39,27 +39,25 @@ credentials, default_project = google.auth.default(
 subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
 subscription_path = subscriber.subscription_path(settings.project_id, settings.subscription_id)
 
-processed_eids = set()
 def callback(message):
     message.ack()
     data = json.loads(message.data.decode('utf-8'))
     list_res = utils.service.users().messages().list(userId='me', q='in:inbox', maxResults=1).execute()
     messages = list_res.get('messages', [])
     eid = messages[0]['id']
-    if eid in processed_eids:
-        return
-    processed_eids.add(eid)
+    
+    if eid == 
 
     msg = utils.service.users().messages().get(
         userId='me', id=eid, format='minimal'
     ).execute()
 
     with open("/Users/ginoprasad/Scripts/EmailManager/data.txt", 'a') as outfile:
-        outfile.write(f"{data} {msg}\n\n")
+        outfile.write(f"{data} {msg} {eid} {processed_eids}\n\n")
     
     labels = msg.get('labelIds', [])
     if 'INBOX' in labels and 'SENT' not in labels:
-        cmd = f"{settings.ttab_path} '{os.getcwd()}/forward_email.py '{eid}'; exit"
+        cmd = f"{settings.ttab_path} '{os.getcwd()}/forward_email.py {eid}; exit'"
         output = sp.run(cmd, shell=True, capture_output=True).stdout.decode()
         print(output)
 
