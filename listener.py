@@ -15,18 +15,15 @@ curr_ids = set(map(str, (os.getpid(), os.getppid())))
 
 siblings = [None]
 num_procs_end = 0
-print("HERE")
-print(siblings and num_procs_end < settings.max_procs_end)
 while siblings and num_procs_end < settings.max_procs_end:
     procs = sp.getoutput(cmd).strip().split('\n')
     is_sibling = lambda proc: proc.strip().split(' ')[0] not in curr_ids
     siblings = [proc for proc in procs if sys.argv[0] in proc and is_sibling(proc)]
-    print(siblings)
 
     if siblings:
         sibling_id = siblings[0].strip().split(' ')[0]
         print(f"\nDuplicate Process Found:\n\t{siblings[0]}\n\n")
-        sp.run(f"kill -9 {sibling_id}", shell=True)
+        sp.run(f"kill {sibling_id}", shell=True)
         num_procs_end += 1
         time.sleep(5)
         
