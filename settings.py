@@ -24,3 +24,4 @@ email_list = [
 
 ttab_path = "/opt/homebrew/bin/ttab"
 
+max_procs_end = 5
