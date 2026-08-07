@@ -84,7 +84,7 @@ def callback(message):
         message = f'Netflix Code: {code}'
         assert len(set("\n'\"") - set(message)) == 3
 
-        cmd = f"'{settings.send_text_path}' '{settings.group_chat_id}' '{message}'"
+        cmd = f"'{settings.ttab_path}' '{settings.send_text_path}' '{settings.group_chat_id}' '{message}'"
         sp.run(cmd, shell=True)
 
 
