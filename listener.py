@@ -41,24 +41,42 @@ credentials, default_project = google.auth.default(
 subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
 subscription_path = subscriber.subscription_path(settings.project_id, settings.subscription_id)
 
+
+def extract_text(payload):
+    if 'parts' in payload:
+        return ''.join(map(extract_text, payload['parts']))
+    elif payload.get('mimeType') == 'text/plain':
+        data = payload.get('body', {}).get('data', '')
+        if data:
+            return base64.urlsafe_b64decode(data).decode('utf-8', errors='ignore')
+    return ''
+
+
 def callback(message):
     message.ack()
-    data = json.loads(message.data.decode('utf-8'))
     list_res = utils.service.users().messages().list(userId='me', q='in:inbox', maxResults=1).execute()
     messages = list_res.get('messages', [])
     eid = messages[0]['id']
-    
+
     if eid == utils.get_last_email_id():
         return
+
     utils.update_last_email_id(eid)
 
     msg = utils.service.users().messages().get(
-        userId='me', id=eid, format='minimal'
+        userId='me', id=eid, format='full'
     ).execute()
 
+    email_from = ','.join([x['value'] for x in msg['payload']['headers'] if x['name'] == 'From'])
+
     labels = msg.get('labelIds', [])
-    if 'INBOX' in labels and 'SENT' not in labels:
-        cmd = f"{settings.ttab_path} '{os.getcwd()}/forward_email.py {eid}; exit'"
+    if 'INBOX' in labels and 'SENT' not in labels and 'info@account.netflix.com' in email_from:
+        payload = extract_text(msg['payload'])
+        link = re.search(r'(?<=Get Code\r\n\[)https://.*?(?=[ \]])', payload).group()
+        message = f'Netflix Code: {link}'
+        assert len(set("\n'\"") - set(message)) == 3
+
+        cmd = f"'{settings.send_text_path}' '{settings.group_chat_id}' '{message}'"
         sp.run(cmd, shell=True)
 
 
