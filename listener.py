@@ -72,8 +72,16 @@ def callback(message):
     labels = msg.get('labelIds', [])
     if 'INBOX' in labels and 'SENT' not in labels and 'info@account.netflix.com' in email_from:
         payload = extract_text(msg['payload'])
-        link = re.search(r'(?<=Get Code\r\n\[)https://.*?(?=[ \]])', payload).group()
-        message = f'Netflix Code: {link}'
+        
+        code = re.search(r'(?<=Get Code\r\n\[)https://.*?(?=[ \]])', payload)
+        if code is None:
+            code = re.search(r'(?<=Enter this code to sign in\r\n\r\n)[0-9][0-9][0-9][0-9]', payload)
+        if code is None:
+            with open(settings.payload_path, 'w') as outfile:
+                outfile.write(payload)
+        code = code.group()
+
+        message = f'Netflix Code: {code}'
         assert len(set("\n'\"") - set(message)) == 3
 
         cmd = f"'{settings.send_text_path}' '{settings.group_chat_id}' '{message}'"

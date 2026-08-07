@@ -13,6 +13,7 @@ subscription_id = "gmail-notifications-sub"
 
 send_text_path = "/Users/ginoprasad/Scripts/BlueBubblesHandler/send_message.py"
 group_chat_id = '+;chat92082781927135072'
+payload_path = 'payload.txt'
 
 TIMEOUT = int(datetime.timedelta(hours=1).total_seconds())
 
