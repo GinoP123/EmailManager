@@ -11,6 +11,9 @@ last_email_cache_file = 'cron_log/last_email.txt'
 project_id = "mail-service-504402"
 subscription_id = "gmail-notifications-sub"
 
+send_text_path = "/Users/ginoprasad/Scripts/BlueBubblesHandler/send_message.py"
+group_chat_id = '+;chat92082781927135072'
+
 TIMEOUT = int(datetime.timedelta(hours=1).total_seconds())
 
 
