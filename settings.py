@@ -29,3 +29,28 @@ email_list = [
 ttab_path = "/opt/homebrew/bin/ttab"
 
 max_procs_end = 5
+
+
+
+regex_include = [
+    r'(?<=Get Code\r\n\[)https://.*?(?=[ \]])',
+    r'(?<=Enter this code to sign in\r\n\r\n)[0-9][0-9][0-9][0-9]',
+    r'(?<=Yes, This Was Me\r\n\[)https://.*?(?=[\]])',
+]
+
+regex_exclude = [
+    'Please review who’s using your Netflix account',
+    'We’ve updated your account with your new payment info',
+    'Your Netflix Household has been confirmed',
+    'we’re updating our prices',
+    "Here's a quick summary of key updates to reflect our new features and services",
+    'We recently announced that',
+    'Your 4K upgrade ends soon'
+]
+
+emails = [
+    'info@account.netflix.com'
+]
+
+
+

@@ -67,19 +67,35 @@ def callback(message):
         userId='me', id=eid, format='full'
     ).execute()
 
-    email_from = ','.join([x['value'] for x in msg['payload']['headers'] if x['name'] == 'From'])
 
+
+
+
+    email_from = ''.join([x['value'] for x in msg['payload']['headers'] if x['name'] == 'From'])
+    email_from = re.search(r'(?<=<).*(?=>)', email_from).group()
+    
     labels = msg.get('labelIds', [])
-    if 'INBOX' in labels and 'SENT' not in labels and 'info@account.netflix.com' in email_from:
+    if 'INBOX' in labels and 'SENT' not in labels and email_from in settings.emails:
         payload = extract_text(msg['payload'])
         
-        code = re.search(r'(?<=Get Code\r\n\[)https://.*?(?=[ \]])', payload)
+        code = None  
+        for regex in settings.regex_include:
+            code = re.search(regex, payload)
+            if code is not None:
+                code = code.group()
+                break
+        
         if code is None:
-            code = re.search(r'(?<=Enter this code to sign in\r\n\r\n)[0-9][0-9][0-9][0-9]', payload)
-        if code is None:
-            with open(settings.payload_path, 'w') as outfile:
-                outfile.write(payload)
-        code = code.group()
+            exclude = False
+            for regex in settings.regex_exclude:
+                code = re.search(regex, payload)
+                if code is not None:
+                    exclude = True
+                    break
+            if not exclude:
+                with open(settings.payload_path, 'w') as outfile:
+                    outfile.write(payload)
+            continue
 
         message = f'Netflix Code: {code}'
         assert len(set("\n'\"") - set(message)) == 3
