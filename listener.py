@@ -95,7 +95,7 @@ def callback(message):
             if not exclude:
                 with open(settings.payload_path, 'w') as outfile:
                     outfile.write(payload)
-            continue
+            return
 
         message = f'Netflix Code: {code}'
         assert len(set("\n'\"") - set(message)) == 3
