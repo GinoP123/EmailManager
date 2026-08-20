@@ -6,6 +6,8 @@ import settings
 import json
 import concurrent.futures
 from google.cloud import pubsub_v1
+from google.cloud.pubsub_v1.subscriber.scheduler import ThreadScheduler
+from concurrent.futures import ThreadPoolExecutor
 import google.auth
 import subprocess as sp
 import time
@@ -27,8 +29,7 @@ while siblings and num_procs_end < settings.max_procs_end:
         print(f"\nDuplicate Process Found:\n\t{siblings[0]}\n\n")
         sp.run(f"kill -9 {sibling_id}", shell=True)
         num_procs_end += 1
-        time.sleep(5)
-        
+        time.sleep(10)
 
 os.chdir(os.path.dirname(sys.argv[0]))
 import utils
@@ -37,6 +38,9 @@ import utils
 credentials, default_project = google.auth.default(
     quota_project_id=settings.project_id
 )
+
+executor = ThreadPoolExecutor(max_workers=1)
+scheduler = ThreadScheduler(executor=executor)
 
 subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
 subscription_path = subscriber.subscription_path(settings.project_id, settings.subscription_id)
@@ -66,10 +70,6 @@ def callback(message):
     msg = utils.service.users().messages().get(
         userId='me', id=eid, format='full'
     ).execute()
-
-
-
-
 
     email_from = ''.join([x['value'] for x in msg['payload']['headers'] if x['name'] == 'From'])
     email_from = re.search(r'(?<=<).*(?=>)', email_from).group()
@@ -104,7 +104,7 @@ def callback(message):
         sp.run(cmd, shell=True)
 
 
-streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
+streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback, scheduler=scheduler)
 
 try:
     streaming_pull_future.result(timeout=settings.TIMEOUT)
