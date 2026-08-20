@@ -17,8 +17,7 @@ matches = re.findall(date_regex, logging)
 if not matches:
     exit(1)
 
-index = logging.split('\n').index(matches[-1])
-if '\n'.join(logging.split('\n')[index+1:]).strip() != '':
+if len(matches) != len(logging.strip().split('\n')):
     emails = ' '.join([f"'{email}'" for email in settings.emails])
     sp.run(f'"{settings.create_event_path}" "{settings.error_message}" 0 {emails}', shell=True)
 

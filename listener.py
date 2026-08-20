@@ -26,10 +26,10 @@ while siblings and num_procs_end < settings.max_procs_end:
 
     if siblings:
         sibling_id = siblings[0].strip().split(' ')[0]
-        print(f"\nDuplicate Process Found:\n\t{siblings[0]}\n\n")
+        # print(f"\nDuplicate Process Found:\n\t{siblings[0]}\n\n")
         sp.run(f"kill -9 {sibling_id}", shell=True)
         num_procs_end += 1
-        time.sleep(10)
+        time.sleep(5)
 
 os.chdir(os.path.dirname(sys.argv[0]))
 import utils
