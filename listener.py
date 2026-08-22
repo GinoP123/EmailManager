@@ -110,7 +110,7 @@ try:
     streaming_pull_future.result(timeout=settings.TIMEOUT)
 except concurrent.futures.TimeoutError:
     streaming_pull_future.cancel()
-    print(f"{settings.TIMEOUT} second window finished. Exiting gracefully.")
+    # print(f"{settings.TIMEOUT} second window finished. Exiting gracefully.")
 
 
 
