@@ -52,7 +52,7 @@ regex_exclude = [
     'Your 4K upgrade ends soon'
 ]
 
-emails = [
+emails_watch = [
     'info@account.netflix.com'
 ]
 

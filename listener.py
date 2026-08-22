@@ -75,7 +75,7 @@ def callback(message):
     email_from = re.search(r'(?<=<).*(?=>)', email_from).group()
     
     labels = msg.get('labelIds', [])
-    if 'INBOX' in labels and 'SENT' not in labels and email_from in settings.emails:
+    if 'INBOX' in labels and 'SENT' not in labels and email_from in settings.emails_watch:
         payload = extract_text(msg['payload'])
         
         code = None  
