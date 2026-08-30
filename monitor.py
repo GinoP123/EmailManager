@@ -1,4 +1,4 @@
-#!/Users/ginoprasad/miniconda3/bin/python3
+#!/usr/bin/env python3
 
 import re
 import datetime
@@ -18,6 +18,6 @@ if not matches:
     exit(1)
 
 if len(matches) != len(logging.strip().split('\n')):
-    emails = ' '.join([f"'{email}'" for email in settings.emails])
+    emails = ' '.join([f"'{email}'" for email in settings.logging_emails])
     sp.run(f'"{settings.create_event_path}" "{settings.error_message}" 0 {emails}', shell=True)
 

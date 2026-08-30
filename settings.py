@@ -2,7 +2,7 @@ import datetime
 
 log_path = "cron_log/log.txt"
 create_event_path = "/Users/ginoprasad/Scripts/ScheduleManager/create_event.py"
-emails = ["giprasad@ucsd.edu"]
+logging_emails = ["giprasad@ucsd.edu"]
 error_message = "EmailManager Ran Into Error!!!"
 
 SCOPES = ['https://mail.google.com/']
