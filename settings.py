@@ -30,7 +30,7 @@ email_list = [
 	'jakeprasad@gmail.com'
 ]
 
-ttab_path = "/opt/homebrew/bin/ttab"
+env_path = "/Users/ginoprasad/.local/bin/env"
 
 max_procs_end = 5
 

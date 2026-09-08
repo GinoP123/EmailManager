@@ -26,7 +26,6 @@ while siblings and num_procs_end < settings.max_procs_end:
 
     if siblings:
         sibling_id = siblings[0].strip().split(' ')[0]
-        # print(f"\nDuplicate Process Found:\n\t{siblings[0]}\n\n")
         sp.run(f"kill -9 {sibling_id}", shell=True)
         num_procs_end += 1
         time.sleep(5)
@@ -100,7 +99,7 @@ def callback(message):
         message = f'Netflix Code: {code}'
         assert len(set("\n'\"") - set(message)) == 3
 
-        cmd = f"'{settings.ttab_path}' '{settings.send_text_path}' '{settings.group_chat_id}' '{message}'; exit"
+        cmd = f"source '{settings.env_path}'; '{settings.send_text_path}' '{settings.group_chat_id}' '{message}'"
         sp.run(cmd, shell=True)
 
 
@@ -110,8 +109,4 @@ try:
     streaming_pull_future.result(timeout=settings.TIMEOUT)
 except concurrent.futures.TimeoutError:
     streaming_pull_future.cancel()
-    # print(f"{settings.TIMEOUT} second window finished. Exiting gracefully.")
-
-
-
 

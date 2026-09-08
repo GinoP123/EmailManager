@@ -17,7 +17,14 @@ matches = re.findall(date_regex, logging)
 if not matches:
     exit(1)
 
-if len(matches) != len(logging.strip().split('\n')):
-    emails = ' '.join([f"'{email}'" for email in settings.logging_emails])
-    sp.run(f'"{settings.create_event_path}" "{settings.error_message}" 0 {emails}', shell=True)
+
+ignore = [
+    r'I\d{4} \d{2}:\d{2}:\d{2}.\d{6} \d{7} fork_posix.cc:\d{2}] Other threads are currently calling into gRPC, skipping fork\(\) handlers'
+
+]
+
+
+# if len(matches) != len(logging.strip().split('\n')):
+#     emails = ' '.join([f"'{email}'" for email in settings.logging_emails])
+#     sp.run(f'"{settings.create_event_path}" "{settings.error_message}" 0 {emails}', shell=True)
 
