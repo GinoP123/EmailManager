@@ -33,9 +33,14 @@ for regex in ignore_regex:
 
 day_of_week = np.array([x.split(' ')[0] for x in logs[date_mask]])
 
-np.where((day_of_week == day_of_week[-1])[::-1])
+if not any(day_of_week != day_of_week[-1]):
+    index = 0
+else:
+    index = np.where(day_of_week != day_of_week[-1])[-1][-1] + 1
+    index = logs.tolist().index(logs[date_mask][index])
+logs_today = logs[index:][~ignore_mask[index:] * ~date_mask[index:]]
 
-# if len(matches) != len():
-#     emails = ' '.join([f"'{email}'" for email in settings.logging_emails])
-#     sp.run(f'"{settings.create_event_path}" "{settings.error_message}" 0 {emails}', shell=True)
+if len(logs_today):
+    emails = ' '.join([f"'{email}'" for email in settings.logging_emails])
+    sp.run(f'"{settings.create_event_path}" "{settings.error_message}" 0 {emails}', shell=True)
 
