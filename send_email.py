@@ -13,6 +13,7 @@ import sys
 
 os.chdir(os.path.dirname(sys.argv[0]))
 
+print(sys.argv)
 assert len(sys.argv) >= 4
 subject = sys.argv[1]
 content = sys.argv[2]
