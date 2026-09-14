@@ -22,8 +22,8 @@ logs = np.array(logging.strip().split('\n'))
 date_mask = np.vectorize(lambda x: x in matches)(logs)
 
 ignore_regex = [
-    r'I\d{4} \d{2}:\d{2}:\d{2}.\d{6} \d{7} fork_posix.cc:\d*\] Other threads are currently calling into gRPC, skipping fork\(\) handlers',
-    r'I\d{4} \d{2}:\d{2}:\d{2}.\d{6} \d{7} ev_poll_posix.cc:\d*\] FD from fork parent still in poll list: fd\(\d*, generation: \d*\)'
+    r'I\d{4} \d{2}:\d{2}:\d{2}.\d{6} \d* fork_posix.cc:\d*\] Other threads are currently calling into gRPC, skipping fork\(\) handlers',
+    r'I\d{4} \d{2}:\d{2}:\d{2}.\d{6} \d* ev_poll_posix.cc:\d*\] FD from fork parent still in poll list: fd\(\d*, generation: \d*\)'
 ]
 
 ignore_mask = np.zeros(len(logs), dtype=bool)
