@@ -8,8 +8,6 @@ import utils
 
 
 print(utils.start_watch(utils.service))
-# print(utils.stop_watch(utils.service))
-
 
 
 
