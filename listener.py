@@ -102,6 +102,9 @@ def callback(message):
         cmd = f"source '{settings.env_path}'; '{settings.send_text_path}' '{settings.group_chat_id}' '{message}'"
         sp.run(cmd, shell=True)
 
+        cmd = f"source '{settings.env_path}'; '{settings.send_text_path}' '{settings.varun_dm_id}' '{message}'"
+        sp.run(cmd, shell=True)
+
 
 streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback, scheduler=scheduler)
 
